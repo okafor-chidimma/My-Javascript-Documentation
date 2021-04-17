@@ -75,4 +75,88 @@ ASYNC-AWAIT
 
 
     async-await is preferred to promise chaining
+
+
+    HOW CAN WE CALL AN ASYNC FUNCTION
+    1. without await keyword
+    2. with await keyword //must be done inside an async function
+
+    FROM STACK OVERFLOW
+    "An async function can contain an await expression, that pauses the execution of the async function and waits for the passed Promise's resolution, and then resumes the async function's execution and returns the resolved value"
+
+    Let's say you have a function B that is supposed to do a bunch of axios calls in a synchronous manner (because each calls depends on the other one or something). You need to use await in front of every axios call. But at the same time, it means you have to put async in front of B. If I want to be able to just trigger B (when you press some button let's say) from another function A (that's not async), you'll just call B and not use await. So here you go, async function without await
+
+
+    WITHOUT AWAIT KEYWORD
+        when we call an async function without the await keyword, it executes synchronously.
+        what do i mean by this, take for instance
+
+        //a function that returns a promise
+        function main() {
+            return new Promise( resolve => {
+                console.log(3);
+                resolve(4);
+                console.log(5);
+            });
+        }
+
+        //an async function that executes main()
+        async function f(){
+            console.log(2);
+            //every line after await, is put inside an event queue
+            let r = await main();
+            console.log(r);
+        }
+
+        console.log(1);
+        //I am calling my async function without the await keyword, so it run synchronously. line by line must execute
+        f();
+        console.log(6);
+
+        //output is
+        1
+        2
+        3
+        5
+        6
+        4
+
+        why this output
+        1. the first console.log prints ==> 1
+        2. the f() begins to execute 
+            a.inside f(),the second console.log prints ==> 2
+            b. await keyword forces function f() execution to pause until main() finishes execution. main() starts executing, while f()pauses so,
+            c. the third console, ==> 3
+            d. the promise resolves 
+            e. the 4th console prints ==> 5 //since we are still executing main()
+            f. now main has completed and it returned a value but the because of the await keyword, f() still being paused, everything within f() block but after the await keyword is put in an event queue, so the r does not print
+            g. the 6th console prints ==> 6
+            f. now the entire code has finished, the system will check if there is anything pending in the event queue, it will see that f() has not completed, so it continues the execution and
+             console.log(r) prints ==> 4
+
+
+        //check the same process out without the awaiting main()
+        function main() {
+            console.log(3);
+            return 4;
+        }
+
+        async function f(){
+            console.log(2);
+            let r = main();
+            console.log(r);
+        }
+
+        console.log(1);
+        f();
+        console.log(5);
+
+        //output
+        1
+        2
+        3
+        4
+        5
+
+        //because there is no await in front of main, everything after it is not put in an event queue, they execute synchronously
 */
