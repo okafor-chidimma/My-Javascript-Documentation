@@ -37,7 +37,9 @@
         
         only if i set the state with an object containing the prevState and the currentState that I want to change it to as seen in the e.g, because what ever we pass in here as the value completely replaces prevState, so if the other properties were not passed in the new state values, the state will no longer contain them an but the issue is that when one 
 
-    2. useEffect() ==> this function allows functional components to perform actions equivalent to the lifecycle methods present in class based components such as ComponentDidMount() and ComponentDidUpdate(). can be used for both sync and async processes
+    2. useEffect() ==> what is a side effect? 
+        A component main purpose be it functional or class-based component, is to return a jsx to be rendered on the screen. Now if a component does this and still performs other actions like fetch data from local storage, consume 3rd party APIs, directly change the DOM, then those other operations are called "Side Effects"
+        a. this function allows functional components to perform actions equivalent to the lifecycle methods present in class based components such as ComponentDidMount() and ComponentDidUpdate(). can be used for both sync and async processes
         b. it gets called with a function as the first parameter(this is required) and that callback function(called effect) gets called when ever there is any change that will cause the component it was defined in to re-render and as a second parameter, an array of values that the useEffect depends(dependencies) on to run.
 
         c. this means that there scenarios that will trigger the call back function and they are
@@ -84,8 +86,44 @@
                 //the returned function only runs when the component is removed or unmounted from rendering
             
             
-    PS: you can use as many useEffects as you want in your component
+        PS: you can use as many useEffects as you want in your component
+    3. useReducer() ==> this function allows you to manage state in a complex way inside of a component
+                b. when the component just requires simple state mgt, for e.g setState to add a title, you can use setState() since it is not a complex action but in a situation where you want to do different things to alter the state value depending on an action type, use useReducer()
+                c. the complexity of the different actions is taken away and handled for you and your component is only concerned with dispatching actions where necessary
+                d. it accepts 2 parameters : reducer function and the action object, just like in redux
 
+
+    4. useContext() and the context API ==> this is used to pass data around within a react app. instead of using props to pass data around from parent to children, these are used to pass the data
+                b. steps to using this
+                    i. initialize the context which gives you access to the context object
+                        //can be any name i want e.g expenseContext
+                        const NotesContext = React.createContext()
+
+                        the NotesContext is an object that contains 2components
+                        Provider and Consumer but we will be using only the Provider as useContext API makes the values available to the components
+
+                    ii. use the provider to wrap the parent component that has the values you want to pass
+                        PS: also note that I can define my values in another file, import it into the file that the provider and pass it in as values
+
+                        <NotesContext.Provider value={{ notes, dispatch }}>
+                            <h1>Notes</h1>
+                            <NoteList/>
+                            <AddNoteForm/>
+                        </NotesContext.Provider>
+
+                        value can either be a single value or incase i have multiple things i wold like to share, i pass in an object with those property values as shown above
+
+                    iii. the use the provided values, go to the component that needs it and call the useContext() hook
+
+                    //using the value in NoteList component
+                    const NoteList = () => {
+                        //since i passed in an object as the value, I can de-structure it to have access to notes which is value that is passed
+                        const { notes } = useContext(NotesContext)
+
+                        return notes.map((note) => (
+                            <Note key={note.title} note={note}/>
+                        ))
+                    }
             
 
 */
