@@ -1,4 +1,9 @@
 /*
+the prev versions of react, a functional component was just a presentational component that did not have state, you cannot even use lifecycle methods in them. they were purely dumb and for presentational purposes only.
+However, react has added new features that will allow functional components to do things that could only be done with class components. things such as Maintaining State, Using methods that can be equivalent to life cycle methods in a class
+
+
+
 THE LATEST FEATURES ADDED TO REACT
 A. HOOKS ==> Hooks are basically functions that let us include react state and lifecycle features without using Classes, and organize the logic inside a component into reusable, isolated units. Basically it allows us create Functional Stateful Components
 
@@ -40,76 +45,7 @@ A. HOOKS ==> Hooks are basically functions that let us include react state and l
         
         only if i set the state with an object containing the prevState and the currentState that I want to change it to as seen in the e.g, because what ever we pass in here as the value completely replaces prevState, so if the other properties were not passed in the new state values, the state will no longer contain them an but the issue is that when one 
 
-    2. useEffect() ==> what is a side effect? this is used when you want to use lifecycle methods in a component
-        A component main purpose be it functional or class-based component, is to return a jsx to be rendered on the screen. Now if a component does this and still performs other actions like fetch data from local storage, consume 3rd party APIs, directly change the DOM, then those other operations are called "Side Effects"
-
-        By Using this hook, we are telling react that our component needs to do something after it has rendered.React will remember the function we passed, and call it later after performing the DOM updates. 
-
-        a. this function allows functional components to perform actions equivalent to the lifecycle methods present in class based components such as ComponentDidMount() and ComponentDidUpdate(). can be used for both sync and async processes
-
-        b. it gets called with a function as the first parameter(this is required) and that callback function(called effect) gets called first when the components renders for the first time and when ever there is any change that will cause the component it was defined in to re-render and as a second parameter, an array of values that the useEffect depends(dependencies) on to run.
-
-        c. By default, the effect runs after every render, and the behaviour of this can be controlled to implement lifecycle methods.
-
-        d. this means that there are scenarios that will trigger the call back function(effect).they are
-            i. when there are no dependencies ==> the effect runs anytime the components is rendered or anytime there is any change that will cause the component to re-render. 
-            
-            
-            
-            a typical use case is shown below:
-
-                useEffect(()=>{
-                    console.log("I will run when the component is first rendered and again when there is any change that will cause the component to re-render");//since there are no dependencies, this effect will run when the component is first rendered and again when there is any change that will cause the component to re-render
-                });
-
-
-            ii. where an empty array of dependencies is used
-            
-                useEffect(()=>{
-                    console.log("I only run once")
-                },[])//useEffect called with the call back function and an empty array ==> this means that it will only run once, when the component is rendered, since it is not dependent on any values whether state or prop, it will not run even when a state or prop value being managed by the component changes because it was not passed into the array. this means that any state or prop change will not trigger the call back function(cause any effect). Basically, By doing this, the function passed in useEffect will always run for the first time but for subsequent re-renders it would not re-run as the value of the array would not change.
-
-                This is equivalent to componentDidMount() life cycle method
-
-            iii. when the effect has dependencies and this is equivalent to componentDidUpdate() life cycle method
-
-                useEffect(()=>{
-                    console.log("I only run when the count state changes")
-                },[currCount])// this runs as many times as the count changes occur
-                //it runs when the app is first rendered since the count state was initialized
-                //it will run again once it detects a change in the value of count
-
-
-                useEffect(()=>{
-                    console.log("I only run when the count and the note states change")
-                },[currCount,currNotes])// this runs as many times as the count and notes changes occur
-                //it runs when the app is first rendered since the count and note states were initialized
-                //it will run again once it detects a change in the value of count or the state of the notes array
-
-
-            iv. when the effect returns a function , the returned function is called the "clean up effect" function and it runs 
-                a. Before useEffect runs the next time
-                b. when the component is removed from the screen i.e when it is unmounted but the logic inside the function passed in the hook(effect) would not be executed or the logic in the return function(in the clean up function)
-
-                useEffect(()=>{
-                    console.log("I only run when the count and the note states change");
-                    return () => {
-                        console.log("Cleaning Up Effect")
-                    }
-                },[currCount,currNotes])
-
-                //so the above effect is runs when the component is first rendered, and outputs
-                    "I only run when the count and the note states change"
-
-                //if there is any change in the currCount and currNotes values, the clean up function runs first and then the effect runs again, so the output becomes
-                    "Cleaning Up Effect"
-                    "I only run when the count and the note states change"
-
-                //when the component is removed or unmounted, only the clean up function runs, so the output becomes
-                    "Cleaning Up Effects"
-            
-            
-        PS: you can use as many useEffects as you want in your component
+    
     3. useReducer() ==> this function allows you to manage state in a complex way inside of a component
                 b. when the component just requires simple state mgt, for e.g setState to add a title, you can use setState() since it is not a complex action but in a situation where you want to do different things to alter the state value depending on an action type, use useReducer()
                 c. the complexity of the different actions is taken away and handled for you and your component is only concerned with dispatching actions where necessary
@@ -150,8 +86,11 @@ A. HOOKS ==> Hooks are basically functions that let us include react state and l
         5. Creating custom hooks ==>
                     a. what is a custom hook? this is just a synchronous function you create that calls all or some of the already defined react hooks and as a naming convention, always start the name of your custom hook with "use"
 
-                    b. when do you create custom hooks: when there is a logic or lines of code that you want to use more than once
+                    b. when do you create custom hooks: 
+                        i.  when there is a logic or lines of code that you want to use more than once
                         ii. when you want to remove or abstract logic that has nothing to do with the component
+                        iii. for e.g If there is an api request that I will make quite frequently in other components, we could break it into its own custom Hook and this can help even more so with readability
+
 
                     c. How do you create? below I have created a useFetch() which can be called a useFetch hook
 
