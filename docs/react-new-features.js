@@ -50,6 +50,7 @@ A. HOOKS ==> Hooks are basically functions that let us include react state and l
                 b. when the component just requires simple state mgt, for e.g setState to add a title, you can use setState() since it is not a complex action but in a situation where you want to do different things to alter the state value depending on an action type, use useReducer()
                 c. the complexity of the different actions is taken away and handled for you and your component is only concerned with dispatching actions where necessary
                 d. it accepts 2 parameters : reducer function and the action object, just like in redux
+                e. it returns the current state and a dispatch function
 
 
     4. useContext() and the context API ==> this is used to pass data around within a react app. instead of using props to pass data around from parent to children, these are used to pass the data
